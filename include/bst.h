@@ -1,88 +1,89 @@
+// Copyright 2021 NNTU-CS
 #ifndef INCLUDE_BST_H_
 #define INCLUDE_BST_H_
-
-#include <iostream>
-#include <string>
 template <typename T>
 class BST {
-public:
+private:
     struct Node {
         T value;
         int count;
         Node* left;
         Node* right;
     };
-private:
     Node* root;
     Node* addNode(Node*, T);
-    int depthTree(Node*);
-    int searchNode(Node*, T);
+    int sTree(Node*, T);
+    int dTree(Node*);
+
 public:
     BST();
-    void add(T);
     int depth();
+    void add(T);
     int search(T);
 };
+
 template <typename T>
-BST <T>::BST() : root(nullptr) {}
-template <typename T>
-typename BST <T>::Node* BST <T>::addNode(Node* currentNode, T value) {
-    if (currentNode == nullptr) {
-        currentNode = new Node;
-        currentNode->value = value;
-        currentNode->count = 1;
-        currentNode->left = currentNode->right = nullptr;
-    }
-    else if (currentNode->value > value) {
-        currentNode->left = addNode(currentNode->left, value);
-    }
-    else if (currentNode->value < value) {
-        currentNode->right = addNode(currentNode->right, value);
-    }
-    else {
-        currentNode->count++;
-    }
-    return currentNode;
+BST<T>::BST() {
+    root = nullptr;
 }
 template <typename T>
-void BST <T>::add(T value) {
+int BST<T>::dTree(Node* root) {
+    if (root == nullptr)
+        return 0;
+    int L = dTree(root->left);
+    int R = dTree(root->right);
+    if (L > R) {
+        return L + 1;
+    }
+    else {
+        return R + 1;
+    }
+}
+template <typename T>
+typename BST<T>::Node* BST<T>::addNode(Node* root, T value) {
+    if (root == nullptr) {
+        root = new Node;
+        root->value = value;
+        root->count = 1;
+        root->left = root->right = nullptr;
+    }
+    else if (root->value > value) {
+        root->left = addNode(root->left, value);
+    }
+    else if (root->value < value) {
+        root->right = addNode(root->right, value);
+    }
+    else {
+        root->count++;
+    }
+    return root;
+}
+template <typename T>
+void BST<T>::add(T value) {
     root = addNode(root, value);
 }
 template <typename T>
-int BST<T>::depthTree(Node* currentNode) {
-    if (currentNode == nullptr) {
+int BST<T>::sTree(Node* root, T value) {
+    if (root == nullptr) {
         return 0;
     }
+    else if (value < root->value) {
+        return sTree(root->left, value);
+    }
+    else if (value > root->value) {
+        return sTree(root->right, value);
+    }
     else {
-        int leftDepth = depthTree(currentNode->left);
-        int rightDepth = depthTree(currentNode->right);
-        if (leftDepth > rightDepth) {
-            return leftDepth + 1;
-        }
-        else {
-            return rightDepth + 1;
-        }
+        return root->count;
     }
 }
 template <typename T>
 int BST<T>::depth() {
-    return depthTree(root) - 1;
-}
-BST<std::string> makeTree(const char* filename);
-template <typename T>
-int BST<T>::searchNode(Node* currentNode, T val) {
-    if (currentNode == nullptr)
-        return 0;
-    else if (currentNode->value == val)
-        return currentNode->count;
-    else if (currentNode->value > val)
-        return searchNode(currentNode->left, val);
-    else
-        return searchNode(currentNode->right, val);
+    return dTree(root) - 1;
 }
 template <typename T>
-int BST<T>::search(T v) {
-    return searchNode(root, v);
+int BST<T>::search(T value) {
+    return sTree(root, value);
 }
 
 #endif  // INCLUDE_BST_H_
