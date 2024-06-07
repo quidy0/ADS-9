@@ -34,8 +34,7 @@ int BST<T>::dTree(Node* root) {
     int R = dTree(root->right);
     if (L > R) {
         return L + 1;
-    }
-    else {
+    }else {
         return R + 1;
     }
 }
@@ -46,14 +45,11 @@ typename BST<T>::Node* BST<T>::addNode(Node* root, T value) {
         root->value = value;
         root->count = 1;
         root->left = root->right = nullptr;
-    }
-    else if (root->value > value) {
+    }else if (root->value > value) {
         root->left = addNode(root->left, value);
-    }
-    else if (root->value < value) {
+    }else if (root->value < value) {
         root->right = addNode(root->right, value);
-    }
-    else {
+    }else {
         root->count++;
     }
     return root;
@@ -66,14 +62,11 @@ template <typename T>
 int BST<T>::sTree(Node* root, T value) {
     if (root == nullptr) {
         return 0;
-    }
-    else if (value < root->value) {
+    }else if (value < root->value) {
         return sTree(root->left, value);
-    }
-    else if (value > root->value) {
+    }else if (value > root->value) {
         return sTree(root->right, value);
-    }
-    else {
+    }else {
         return root->count;
     }
 }
@@ -85,5 +78,4 @@ template <typename T>
 int BST<T>::search(T value) {
     return sTree(root, value);
 }
-
 #endif  // INCLUDE_BST_H_

@@ -4,7 +4,6 @@
 #include  "bst.h"
 
 BST<std::string> makeTree(const char* filename) {
-    // поместите сюда свой код
     BST<std::string> Tree;
     std::ifstream file(filename);
     std::string strr = "";
@@ -25,14 +24,12 @@ BST<std::string> makeTree(const char* filename) {
     for (int i = 0; i < len; i++) {
         if (strr[i] >= 'a' && strr[i] <= 'z') {
             inWord = true;
-        }
-        else {
+        }else {
             inWord = false;
         }
         if (inWord) {
             tempStrr += strr[i];
-        }
-        else {
+        }else {
             Tree.add(tempStrr);
             tempStrr = "";
         }
