@@ -1,31 +1,20 @@
-// Copyright 2021 NNTU-CS
-#include  <iostream>
-#include  <fstream>
-#include  <locale>
-#include  <cstdlib>
-#include  "bst.h"
+#include "bst.h"
+#include <fstream>
+#include <sstream>
+#include <algorithm>
 
+BST<std::string> makeTree(const char* filename) {
+    BST<std::string> tree;
+    std::ifstream file(filename);
 
-BetterBST<std::string> constructTree(const char* filename) {
-  // поместите сюда свой код
- BetterBST<std::string> tree;
- std::ifstream file(filename);
-    if (!file.is_open()) {
- std::cerr << "Error opening file." << std::endl;
-        return tree;
-    }
-
- std::string word;
-    while (file >> word) {
-        for (char& c : word) {
- c = std::tolower(c);
-            if (!isalpha(c)) {
- c = ' ';
-            }
+    if (file.is_open()) {
+        std::string word;
+        while (file >> word) {
+            std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+            word.erase(std::remove_if(word.begin(), word.end(), ispunct), word.end());
+            tree.insert(word);
         }
- tree.insert(word);
+        file.close();
     }
-
- file.close();
     return tree;
 }
