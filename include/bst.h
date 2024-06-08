@@ -12,8 +12,8 @@ template<typename T>
 class BST {
  private:
     struct Node {
-        T data; 
-        Node* leftBranch, * rightBranch; 
+        T data;
+        Node* leftBranch, * rightBranch;
         int occurrences;
     };
 

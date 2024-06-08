@@ -1,3 +1,4 @@
+// Copyright 2021 NNTU-CS
 #include  <fstream>
 #include  <locale>
 #include  <cstdlib>
