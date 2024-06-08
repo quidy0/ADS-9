@@ -12,68 +12,68 @@ template<typename T>
 class BST {
  private:
     struct Node {
-        T value;
-        Node* l, * r;
-        int z;
+        T data; 
+        Node* leftBranch, * rightBranch; 
+        int occurrences;
     };
 
     Node* root;
-    Node* add(Node* root, T value) {
+    Node* addNode(Node* root, T data) {
         if (root == nullptr) {
             root = new Node;
-            root->value = value;
-            root->z = 1;
-            root->l = root->r = nullptr;
-        } else if (root->value > value) {
-            root->l = add(root->l, value);
-        } else if (root->value < value) {
-            root->r = add(root->r, value);
+            root->data = data;
+            root->occurrences = 1;
+            root->leftBranch = root->rightBranch = nullptr;
+        } else if (root->data > data) {
+            root->leftBranch = addNode(root->leftBranch, data);
+        } else if (root->data < data) {
+            root->rightBranch = addNode(root->rightBranch, data);
         } else {
-            root->z++;
+            root->occurrences++;
         }
         return root;
     }
-    int depth(Node* root) {
-        int ll, rr;
+    int Depth(Node* root) {
+        int hl, hr;
         if (root == nullptr) {
             return 0;
         }
-        ll = depth(root->l);
-        rr = depth(root->r);
-        return std::max(ll, rr) + 1;
+        hl = Depth(root->leftBranch);
+        hr = Depth(root->rightBranch);
+        return std::max(hl, hr) + 1;
     }
-    int search(Node* root, T value) {
+    int Search(Node* root, T data) {
         if (root == nullptr) {
             return 0;
-        } else if (value < root->value) {
-            return search(root->l, value);
-        } else if (value > root->value) {
-            return search(root->r, value);
+        } else if (data < root->data) {
+            return Search(root->leftBranch, data);
+        } else if (data > root->data) {
+            return Search(root->rightBranch, data);
         } else {
-            return root->z;
+            return root->occurrences;
         }
     }
     void Del(Node* root) {
         if (root == nullptr)
             return;
-        Del(root->l);
-        Del(root->r);
+        Del(root->leftBranch);
+        Del(root->rightBranch);
         delete root;
         root = nullptr;
     }
 
  public:
     BST() : root(nullptr) {}
-    void add2(T value) {
-        root = add(root, value);
+    void addNew(T data) {
+        root = addNode(root, data);
     }
 
-    int depth2() {
-        return depth(root) - 1;
+    int depth() {
+        return Depth(root) - 1;
     }
 
-    int search2(T value) {
-        return search(root, value);
+    int search(T data) {
+        return Search(root, data);
     }
 };
 
