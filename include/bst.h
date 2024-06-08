@@ -7,8 +7,18 @@
 #include <string>
 
 template <typename T>
+class BSTNode {
+ public:
+    T data;
+    BSTNode<T>* left;
+    BSTNode<T>* right;
+
+    BSTNode(const T& value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+template <typename T>
 class BST {
-private:
+ private:
     BSTNode<T>* root;
 
     void insertHelper(BSTNode<T>*& node, const T& value) {
@@ -74,7 +84,7 @@ private:
         return node;
     }
 
-public:
+ public:
     BST() : root(nullptr) {}
 
     void insert(const T& value) {

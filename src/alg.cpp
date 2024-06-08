@@ -8,11 +8,11 @@ BST<std::string> makeTree(const char* filename) {
     std::ifstream file(filename);
 
     if (file.is_open()) {
-        std::string w;
-        while (file >> w) {
-            std::transform(w.begin(), w.end(), w.begin(), ::tolower);
-            w.erase(std::remove_if(w.begin(), w.end(), ispunct), w.end());
-            tree.insert(w);
+        std::string wr;
+        while (file >> wr) {
+            std::transform(wr.begin(), wr.end(), wr.begin(), ::tolower);
+            wr.erase(std::remove_if(wr.begin(), wr.end(), ispunct), wr.end());
+            tree.insert(wr);
         }
         file.close();
     }
