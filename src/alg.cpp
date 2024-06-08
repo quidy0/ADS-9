@@ -1,20 +1,27 @@
-#include "bst.h"
-#include <fstream>
-#include <sstream>
-#include <algorithm>
+#include  <fstream>
+#include  <locale>
+#include  <cstdlib>
+#include  <string>
+#include  "bst.h"
 
 BST<std::string> makeTree(const char* filename) {
-    BST<std::string> tree;
+    // поместите сюда свой код
+    std::string word;
     std::ifstream file(filename);
-
-    if (file.is_open()) {
-        std::string wr;
-        while (file >> wr) {
-            std::transform(wr.begin(), wr.end(), wr.begin(), ::tolower);
-            wr.erase(std::remove_if(wr.begin(), wr.end(), ispunct), wr.end());
-            tree.insert(wr);
-        }
-        file.close();
+    if (!file) {
+        std::cout << "File error!" << std::endl;
     }
-    return tree;
+    char chu;
+    BST<std::string> Tree;
+    while (file.get(chu)) {
+        if (isalpha(chu)) {
+            word += tolower(chu);
+        }
+        else {
+            Tree.add2(word);
+            word.clear();
+        }
+    }
+    file.close();
+    return Tree;
 }

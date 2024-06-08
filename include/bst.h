@@ -1,107 +1,80 @@
 // Copyright 2021 NNTU-CS
-
-#ifndef BST_H
-#define BST_H
-
+#ifndef INCLUDE_BST_H_
+#define INCLUDE_BST_H_
 #include <iostream>
+#include <fstream>
 #include <string>
+#include <cctype>
+#include <algorithm>
 
-template <typename T>
-class BSTNode {
- public:
-    T data;
-    BSTNode<T>* left;
-    BSTNode<T>* right;
+template<typename T>
 
-    BSTNode(const T& value) : data(value), left(nullptr), right(nullptr) {}
-};
-
-template <typename T>
 class BST {
  private:
-    BSTNode<T>* root;
+    struct Node {
+        T value;
+        Node* l, * r;
+        int z;
+    };
 
-    void insertHelper(BSTNode<T>*& node, const T& value) {
-        if (node == nullptr) {
-            node = new BSTNode<T>(value);
+    Node* root;
+    Node* add(Node* root, T value) {
+        if (root == nullptr) {
+            root = new Node;
+            root->value = value;
+            root->z = 1;
+            root->l = root->r = nullptr;
+        } else if (root->value > value) {
+            root->l = add(root->l, value);
+        } else if (root->value < value) {
+            root->r = add(root->r, value);
+        } else {
+            root->z++;
         }
-        else if (value < node->data) {
-            insertHelper(node->left, value);
-        }
-        else if (value > node->data) {
-            insertHelper(node->right, value);
-        }
+        return root;
     }
-
-    int depthHelper(BSTNode<T>* node) {
-        if (node == nullptr) {
+    int depth(Node* root) {
+        int ll, rr;
+        if (root == nullptr) {
             return 0;
         }
-        int leftDepth = depthHelper(node->left);
-        int rightDepth = depthHelper(node->right);
-        return std::max(leftDepth, rightDepth) + 1;
+        ll = depth(root->l);
+        rr = depth(root->r);
+        return std::max(ll, rr) + 1;
     }
-
-    BSTNode<T>* searchHelper(BSTNode<T>* node, const T& value) {
-        if (node == nullptr || node->data == value) {
-            return node;
-        } else if (value < node->data) {
-            return searchHelper(node->left, value);
+    int search(Node* root, T value) {
+        if (root == nullptr) {
+            return 0;
+        } else if (value < root->value) {
+            return search(root->l, value);
+        } else if (value > root->value) {
+            return search(root->r, value);
         } else {
-            return searchHelper(node->right, value);
+            return root->z;
         }
     }
-
-    BSTNode<T>* findMin(BSTNode<T>* node) {
-        if (node->left == nullptr) {
-            return node;
-        }
-        return findMin(node->left);
-    }
-
-    BSTNode<T>* removeHelper(BSTNode<T>*& node, const T& value) {
-        if (node == nullptr) {
-            return nullptr;
-        } else if (value < node->data) {
-            node->left = removeHelper(node->left, value);
-        } else if (value > node->data) {
-            node->right = removeHelper(node->right, value);
-        } else {
-            if (node->left == nullptr) {
-                BSTNode<T>* temp = node->right;
-                delete node;
-                return temp;
-            } else if (node->right == nullptr) {
-                BSTNode<T>* temp = node->left;
-                delete node;
-                return temp;
-            } else {
-                BSTNode<T>* temp = findMin(node->right);
-                node->data = temp->data;
-                node->right = removeHelper(node->right, temp->data);
-            }
-        }
-        return node;
+    void Del(Node* root) {
+        if (root == nullptr)
+            return;
+        Del(root->l);
+        Del(root->r);
+        delete root;
+        root = nullptr;
     }
 
  public:
     BST() : root(nullptr) {}
-
-    void insert(const T& value) {
-        insertHelper(root, value);
+    void add2(T value) {
+        root = add(root, value);
     }
 
-    int depth() {
-        return depthHelper(root);
+    int depth2() {
+        return depth(root) - 1;
     }
 
-    bool search(const T& value) {
-        return searchHelper(root, value) != nullptr;
-    }
-
-    void remove(const T& value) {
-        removeHelper(root, value);
+    int search2(T value) {
+        return search(root, value);
     }
 };
-#endif  // INCLUDE_BST_H_
 
+#endif  // INCLUDE_BST_H_
